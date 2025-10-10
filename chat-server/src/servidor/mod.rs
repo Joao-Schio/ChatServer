@@ -22,6 +22,7 @@ pub enum ErroServidor{
     JsonInvalido,
     FalhaAoEscrever,
     FalhaAoLer,
+    UsuarioOffline,
 }
 
 impl From<ErroServidor> for std::io::Error {
@@ -32,7 +33,8 @@ impl From<ErroServidor> for std::io::Error {
             UsuarioNaoExistente => "usuario não existe",
             JsonInvalido => "Json invalido",
             FalhaAoEscrever => "Falha ao escrever",
-            FalhaAoLer => "Falha ao ler"
+            FalhaAoLer => "Falha ao ler",
+            UsuarioOffline => "Usuario offline"
         };
         std::io::Error::new(std::io::ErrorKind::Other, msg)
     }
@@ -181,6 +183,7 @@ impl ToComando for Servidor{
                 Ok(Comando::Tchau { usuario: usuario })
             },
             MensagemPrivada(conteudo) => {
+                println!("{}\n{:?}\n{:?}", &conteudo, &mes_json.usuario, &mes_json.usuarios);
                 let nomes= mes_json.usuarios.ok_or(UsuarioNaoExistente)?;
                 let remetente = self.get_usuario(&mes_json.usuario)?;
                 
@@ -190,7 +193,6 @@ impl ToComando for Servidor{
                     .cloned()
                     .ok_or(UsuarioNaoExistente)
                 ).collect::<Result<_, _>>()?;
-
                 integrantes.push(remetente.clone());
 
                 Ok(
@@ -213,6 +215,9 @@ impl ProcessarComando for Servidor{
         use Comando::*;
         match comando{
             MensagemGlobal { usuario, conteudo } => {
+                if !usuario.esta_online(){
+                    return Err(ErroServidor::UsuarioOffline)
+                }
                 let mensagem = Mensagem::new(usuario, conteudo);
                 self.mensagens_globais.adicionar_mensagem(mensagem);
                 Ok(
@@ -232,6 +237,7 @@ impl ProcessarComando for Servidor{
             },
             MensagemPrivada { integrantes, remetente, mensagem } => {
             
+                
                 let usuarios_set: HashSet<_> = integrantes.iter().cloned().collect();
                 
                 let conv = self.mensagens_privadas.iter_mut().find(|conversa| {
