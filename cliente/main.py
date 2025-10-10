@@ -61,6 +61,9 @@ def get_mensagem(cliente : Cliente, nome_usuario : str):
 def main():
     cliente = Cliente("127.0.0.1", 8000)
     nome_usuario = input("Digite seu nome de usuario\n")
+    if len(nome_usuario.split()) > 1:
+        print("Nome de usuario não pode ter espaços")
+        exit(1)
     get_mensagem(cliente, nome_usuario)
 
 

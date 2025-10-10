@@ -32,7 +32,7 @@
         \begin{verbatim}
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
         \end{verbatim}
-        Esse script vai identificar o seu sistema operacional e instalar a versão correspondente do sistema de compilação do rust. \\
+        Esse script vai identificar o seu sistema operacional e instalar a versão correspondente do sistema de compilação do Rust. \\
         Após isso, é preciso navegar para o diretório chat-server em um terminal e rodar os comandos: \\
         \begin{center}
             \begin{verbatim}
@@ -40,7 +40,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
                 cargo run --release # para rodar em release                            
             \end{verbatim}
         \end{center}
-        Ao rodar esses comandos, o cargo, (sistema de compilação do rust) começará a baixar as dependências do projeto.
+        Ao rodar esses comandos, o cargo, (sistema de compilação do Rust) começará a baixar as dependências do projeto.
         Para seguir as especificações do trabalho foram-se utilizadas apenas as crates (bibliotecas) tokio e serde-json \\
         tokio serve para ter uma runtime assíncrona e serde-json serve para ter suporte a JSON.
     }    
@@ -54,7 +54,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
         Para manter o projeto o mais próximo ao hardware possível, não tentei implementar algo parecido com HTTP, utilizei apenas o envio de JSON via TCP.
         \subsection{As mensagens enviadas ao servidor}
         {
-            Todas as mensagens trocadas com o servidor são enviadas usando um arqvuivo JSON que contém os seguintes campos:
+            Todas as mensagens trocadas com o servidor são enviadas usando um arquivo JSON que contém os seguintes campos:
             \begin{enumerate}
                 \item Tipo de mensagem
                 \item Usuário
@@ -105,7 +105,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
     \subsection{Como usar o cliente}
     {
         Nesta seção vou explicar o uso do cliente.\\
-        para roda-lo não é preciso instalar nenhuma biblioteca adicional, apenas o interpretador python. \\
+        para rodá-lo não é preciso instalar nenhuma biblioteca adicional, apenas o interpretador python. \\
         Para rodar utilize o comando: python3 main.py .\\
         \subsubsection{Cadastro de usuário}
          O script perguntara seu nome de usuário, você pode digitar qualquer nome desde que não haja espaços.
@@ -129,7 +129,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
     \section{Testes}
     {
-        Para testar o projeto, fiz um script em python que criará 1000 usuários, mandará 4000 mensagens globais, criará 500 chats privados com no minimo 2 pessoas e no máximo 50, e mandará no mínimo 100 mensagens em cada um desses chats privados.
+        Para testar o projeto, fiz um script em python que criará 1000 usuários, mandará 4000 mensagens globais, criará 500 chats privados com no mínimo 2 pessoas e no máximo 50, e mandará no mínimo 100 mensagens em cada um desses chats privados.
         Resultado dos testes:
         
         \begin{verbatim}
