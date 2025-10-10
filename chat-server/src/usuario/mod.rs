@@ -1,30 +1,45 @@
-use std::collections::VecDeque;
-
-use crate::conexao::Conexao;
-use crate::mensagem::Mensagem;
-
-
-
-
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::hash::{Hash, Hasher};
+#[derive(Debug)]
 pub struct Usuario{
     nome    : String,
-    conexao : Conexao, 
+    online  : AtomicBool
 }
 
 
 impl Usuario{
-    pub fn new(nome : String, conexao : Conexao) -> Self{
-        Self { nome: nome, conexao: conexao }
+    pub fn new(nome : String) -> Self{
+        Self { nome: nome, online: AtomicBool::new(true) }
     }
 
-    pub async fn mandar_mensagem(&mut self, mensagens : VecDeque<Mensagem>) -> std::io::Result<()>{
-        for i in &mensagens{
-            self.conexao.mandar_mensagem_json(i).await?;
-        }
-        Ok(())
-    }
-
+    #[inline]
     pub fn get_nome(&self) -> &String{
         return &self.nome;
     }
+
+    #[inline]
+    pub fn esta_online(&self) -> bool {
+        self.online.load(Ordering::Relaxed)
+    }    
+    #[inline]
+    pub fn set_online(&self, v: bool) {
+        self.online.store(v, Ordering::Relaxed);
+    }
 }
+
+impl PartialEq for Usuario {
+    fn eq(&self, other: &Self) -> bool {
+        self.nome == other.nome
+    }
+}
+
+impl Eq for Usuario {}
+
+impl Hash for Usuario {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.nome.hash(state);
+    }
+}
+
+pub type RefUsuario = Arc<Usuario>;
