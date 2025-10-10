@@ -67,7 +67,6 @@ pub struct MensagemDTO {
 
 impl From<&Mensagem> for MensagemDTO {
     fn from(m: &Mensagem) -> Self {
-        // assuming Mensagem has fields: usuario: Arc<Usuario>, conteudo: String
         Self {
             usuario: m.usuario.get_nome().clone(),
             conteudo: m.conteudo.clone(),
