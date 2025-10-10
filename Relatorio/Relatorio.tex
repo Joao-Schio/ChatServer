@@ -1,0 +1,103 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
+\title{Redes de Computadores \\ Trabalho Prático - 1}
+\author{João Pedro Schio Ortega}
+\date{09 de Outubro de 2025}
+
+\begin{document}
+
+\maketitle
+
+\section{Descrição}
+{
+    O objetivo do trabalho é implementar e experimentar a comunicação em redes a partir da construção e da análise de servidores.
+
+}
+
+\section{Servidor de chat multi-usuário}
+{
+    Para exercitar o uso de sockets, decidi implementar um servidor de chat onde clientes vão poder trocar mensagens globais ou criar grupos de conversa privada.
+}
+
+\section{Implementação do servidor}
+{
+    A linguagem escolhida para o servidor foi Rust, devido às suas garantias de segurança e ao alto desempenho.
+    \newpage
+    \subsection{Compilar Rust}
+    {
+        Como Rust ainda é uma linguagem mais nichada vou deixar aqui um tutorial de como compilar o servidor.\\
+        A maneira mais fácil e que funionará independente da plataforma é utilizando o script rustup que a fundação Rust disponibilizou
+        \href{https://rustup.rs/}{rustup}.
+        \begin{verbatim}
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+        \end{verbatim}
+        Esse script vai identificar o seu sistema operacional e instalar a versão correspondente do sistema de compilação do rust. \\
+        Após isso, é preciso navegar para o diretório chat-server em um terminal e rodar os comandos: \\
+        \begin{center}
+            \begin{verbatim}
+                cargo run # para rodar em debug 
+                cargo run --release # para rodar em release                            
+            \end{verbatim}
+        \end{center}
+        Ao rodar esses comandos, o cargo, (sistema de compilação do rust) começará a baixar as dependências do projeto.
+        Para seguir as especificações do trabalho foram-se utilizadas apenas as crates (bibliotecas) tokio e serde-json \\
+        tokio serve para ter uma runtime assíncrona e serde-json serve para ter suporte a JSON.
+    }    
+
+    \subsection{Protocolo}
+    {
+        O protocolo escolhido para o envio de mensagens foi TCP por conta de suas garantias de entrega
+    }
+    \subsection{Api}
+    {
+        Para manter o projeto o mais próximo ao hardware possível, não tentei implementar algo parecido com HTTP, utilizei apenas o envio de JSON via TCP.
+        \subsection{As mensagens enviadas ao servidor}
+        {
+            Todas as mensagens trocadas com o servidor são enviadas usando um arqvuivo JSON que contém os seguintes campos:
+            \begin{enumerate}
+                \item Tipo de mensagem
+                \item Usuário
+                \item Conteúdo
+            \end{enumerate}
+        }
+        \subsection{Tipos de mensagem}
+        {
+            Os tipos de mensagem e seus comportamentos.
+            \\ \begin{enumerate}
+                \item Ola
+                \item MensagemGlobal
+                \item MensagemPrivada
+                \item Tchau
+                \item GetMensagens
+            \end{enumerate}
+        }
+        
+        
+        \subsection{Comportamento das mensagens}
+        {
+            \begin{table}[h!]
+                \centering
+                \begin{tabular}{|p{4.8cm}|p{4.8cm}|p{4.8cm}|}
+                    \hline
+                    \textbf{Tipo} & \textbf{Argumentos} & \textbf{Comportamento} \\
+                    \hline
+                    \texttt{Ola} & \texttt{String (nome)} & Adiciona o usuário à lista de conectados e envia uma mensagem de boas-vindas. \\
+                    \hline
+                    \texttt{Tchau} & \texttt{String (nome)} & Remove o usuário da lista de conectados e notifica os demais. \\
+                    \hline
+                    \texttt{MensagemPrivada} & \texttt{[String] (usuários), String (conteúdo)} & Envia uma mensagem privada apenas aos usuários especificados. \\
+                    \hline
+                    \texttt{MensagemGlobal} & \texttt{String (conteúdo)} & Envia uma mensagem a todos os usuários conectados. \\
+                    \hline
+                    \texttt{GetMensagens} & \texttt{String (Usuário)} & Recebe como resposta todas as mensagens globais e todas as mensagens privadas que o usuario faz parte\\
+                    \hline
+                \end{tabular}
+            \end{table}
+        }
+            
+
+    }
+}
+
+\end{document}
