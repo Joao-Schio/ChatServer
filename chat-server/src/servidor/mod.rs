@@ -184,12 +184,14 @@ impl ToComando for Servidor{
                 let nomes= mes_json.usuarios.ok_or(UsuarioNaoExistente)?;
                 let remetente = self.get_usuario(&mes_json.usuario)?;
                 
-                let integrantes = nomes.iter().map(|nome| 
+                let mut integrantes: Vec<Arc<Usuario>> = nomes.iter().map(|nome| 
                     self.usuarios.iter()
                     .find(|u| u.get_nome() == nome)
                     .cloned()
                     .ok_or(UsuarioNaoExistente)
                 ).collect::<Result<_, _>>()?;
+
+                integrantes.push(remetente.clone());
 
                 Ok(
                     Comando::MensagemPrivada { integrantes: integrantes, remetente : remetente, mensagem: conteudo }
