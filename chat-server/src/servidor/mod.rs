@@ -183,7 +183,6 @@ impl ToComando for Servidor{
                 Ok(Comando::Tchau { usuario: usuario })
             },
             MensagemPrivada(conteudo) => {
-                println!("{}\n{:?}\n{:?}", &conteudo, &mes_json.usuario, &mes_json.usuarios);
                 let nomes= mes_json.usuarios.ok_or(UsuarioNaoExistente)?;
                 let remetente = self.get_usuario(&mes_json.usuario)?;
                 

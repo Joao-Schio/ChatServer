@@ -27,7 +27,7 @@
     \subsection{Compilar Rust}
     {
         Como Rust ainda é uma linguagem mais nichada vou deixar aqui um tutorial de como compilar o servidor.\\
-        A maneira mais fácil e que funionará independente da plataforma é utilizando o script rustup que a fundação Rust disponibilizou
+        A maneira mais fácil e que funcionará independente da plataforma é utilizando o script rustup que a fundação Rust disponibilizou
         \href{https://rustup.rs/}{rustup}.
         \begin{verbatim}
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
@@ -90,13 +90,57 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
                     \hline
                     \texttt{MensagemGlobal} & \texttt{String (conteúdo)} & Envia uma mensagem a todos os usuários conectados. \\
                     \hline
-                    \texttt{GetMensagens} & \texttt{String (Usuário)} & Recebe como resposta todas as mensagens globais e todas as mensagens privadas que o usuario faz parte\\
+                    \texttt{GetMensagens} & \texttt{String (Usuário)} & Recebe como resposta todas as mensagens globais e todas as mensagens privadas que o usuário faz parte\\
                     \hline
                 \end{tabular}
             \end{table}
         }
-            
+    }
 
+    \section{Cliente}
+    {
+        Para fazer o cliente eu escolhi a linguagem de programação Python, por conta de sua simplicidade e facilidade de desenvolvimento.
+        \\Como a comunicação com o servidor é feita através de mensagens JSON enviadas via TCP o desenvolvimento do cliente foi simples, foi necessário apenas criar uma classe de comunicação com o servidor, uma função que desenha na tela as respostas do servidor e um switch case para cada tipo de mensagem que pode ser mandada.
+    }
+    \subsection{Como usar o cliente}
+    {
+        Nesta seção vou explicar o uso do cliente.\\
+        para roda-lo não é preciso instalar nenhuma biblioteca adicional, apenas o interpretador python. \\
+        Para rodar utilize o comando: python3 main.py .\\
+        \subsubsection{Cadastro de usuário}
+         O script perguntara seu nome de usuário, você pode digitar qualquer nome desde que não haja espaços.
+        \subsubsection{Envio de mensagens globais}
+        {
+            Para enviar mensagens globais, é necessário usar o comando:
+            \begin{verbatim}
+/m (conteudo)
+            \end{verbatim}
+        }
+        \subsubsection{Envio de mensagens privadas}
+        {
+            Para enviar mensagens privadas é necessário usar o comando
+                \begin{verbatim}
+/mespriv (lista de nomes separados por virgula) (mensagem)
+                \end{verbatim}
+                Chats privados podem conter dois ou mais integrantes.
+        }
+        
+    }
+
+    \section{Testes}
+    {
+        Para testar o projeto, fiz um script em python que criará 1000 usuários, mandará 4000 mensagens globais, criará 500 chats privados com no minimo 2 pessoas e no máximo 50, e mandará no mínimo 100 mensagens em cada um desses chats privados.
+        Resultado dos testes:
+        
+        \begin{verbatim}
+Resumo:
+Usuarios:            1000 (reg ok=True, err=0)
+Msgs globais:        meta 4000 (ok=4000, err=0)
+Chats privados:      500
+mensagens privadas   Meta 50000 (ok=50000, err=0)
+python3 super_send.py  3.07s user 3.88s system 60% cpu 11.466 total
+        \end{verbatim}
+        Como pode-se ver, o servidor conseguiu registrar toda essa carga em menos de 12 segundos, levando em consideração que existem alguns sleeps durante o código de teste, considero que o servidor de único thread assíncrono em Rust se deu muito bem.
     }
 }
 
